@@ -72,6 +72,9 @@
             <div><h3>Email</h3><p><a href="mailto:cindymonika2020@gmail.com">cindymonika2020@gmail.com</a></p></div>
           </div>
           <div class="info-card">
+            <div><h3>WhatsApp</h3><p><a href="https://wa.me/6281234567890?text=Halo%20IR%20Snack%2C%20saya%20ingin%20bertanya%20tentang%20produk." target="_blank" rel="noopener noreferrer" data-wa-link>+62 812-3456-7890</a></p></div>
+          </div>
+          <div class="info-card">
             <div><h3>Media sosial</h3><div class="social-row"><a href="https://www.instagram.com/irsnack_?evlk=ZGJlbW85YXRiNXZp" target="_blank" rel="noopener noreferrer" aria-label="Instagram IR Snack"><i class="bi bi-instagram"></i></a><a href="https://www.facebook.com/share/1FYJHGCw4S/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook IR Snack"><i class="bi bi-facebook"></i></a><a href="https://youtube.com/@irsnack?si=y4mi7K8ttKDDr9QZ" target="_blank" rel="noopener noreferrer" aria-label="YouTube IR Snack"><i class="bi bi-youtube"></i></a><a href="https://www.tiktok.com/@irsnack_?_r=1&_t=ZS-9BXiYoQ5Tan" target="_blank" rel="noopener noreferrer" aria-label="TikTok IR Snack"><i class="bi bi-tiktok"></i></a></div></div>
           </div>
           <div class="map-card">
@@ -80,11 +83,11 @@
         </div>
 
         <div class="col-lg-7" data-aos="fade-left">
-          <form action="https://formsubmit.co/cindymonika2020@gmail.com" method="POST" class="form-card">
+          <form action="https://formsubmit.co/cindymonika2020@gmail.com" method="POST" class="form-card" id="contact-form" data-wa="6281234567890">
             <input type="hidden" name="_subject" value="Pesan Baru dari Website IR Snack">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://irsnack.github.io/">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
             <h3>Kirim pesan</h3>
             <p>Isi formulir berikut dan tim kami akan menghubungi Anda.</p>
             <div class="row gy-3">
@@ -105,7 +108,11 @@
                 <textarea name="message" id="message-field" class="form-control" rows="7" required></textarea>
               </div>
               <div class="col-12">
-                <button type="submit" class="btn-ir btn-ir-primary">Kirim Pesan</button>
+                <div class="form-actions">
+                  <button type="submit" class="btn-ir btn-ir-primary" id="submit-btn">Kirim Pesan</button>
+                  <button type="button" class="btn-ir btn-ir-wa" id="wa-btn"><i class="bi bi-whatsapp"></i> Kirim via WhatsApp</button>
+                </div>
+                <div id="form-status" class="form-status" role="status" aria-live="polite" hidden></div>
               </div>
             </div>
           </form>
@@ -133,12 +140,9 @@
         <div class="footer-contact">
           <div><span>Jl. Sorogenen I Jl. Karanglo No.59, RT.04/RW.01, Sorogenan I, Purwomartani, Kec. Kalasan, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55571</span></div>
           <div><a href="mailto:cindymonika2020@gmail.com">cindymonika2020@gmail.com</a></div>
+          <div><a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">WhatsApp: +62 812-3456-7890</a></div>
         </div>
       </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="copyright">&copy; 2026 <strong>IR Snack</strong> &ndash; PT Intan Rahmadhani Santosa. Hak Cipta Dilindungi.</div>
     </div>
 
   </div>
