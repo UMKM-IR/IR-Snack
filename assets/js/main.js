@@ -92,6 +92,71 @@
   var yr = document.getElementById("year");
   if (yr) yr.textContent = String(new Date().getFullYear());
 
+
+  /* Formulir kontak: kirim tanpa pindah halaman + cadangan WhatsApp */
+  var form = document.getElementById("contact-form");
+  if (form) {
+    var status = document.getElementById("form-status");
+    var btn = document.getElementById("submit-btn");
+    var waBtn = document.getElementById("wa-btn");
+
+    function show(msg, ok) {
+      status.hidden = false;
+      status.textContent = msg;
+      status.className = "form-status " + (ok ? "ok" : "err");
+    }
+
+    function openWA() {
+      var f = form.elements;
+      var text = "Halo IR Snack,\n\nNama: " + f.name.value +
+        "\nEmail: " + f.email.value +
+        "\nSubjek: " + f.subject.value +
+        "\n\n" + f.message.value;
+      window.open("https://wa.me/" + form.getAttribute("data-wa") + "?text=" + encodeURIComponent(text), "_blank", "noopener");
+    }
+
+    if (waBtn) {
+      waBtn.addEventListener("click", function () {
+        if (!form.reportValidity()) return;
+        openWA();
+      });
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      if (form.elements._honey && form.elements._honey.value) return;
+
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Mengirim...";
+      status.hidden = true;
+
+      var url = form.action.replace("formsubmit.co/", "formsubmit.co/ajax/");
+      fetch(url, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form)
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (res.ok && String(res.d.success) === "true") {
+            show("Terima kasih! Pesan Anda sudah terkirim. Tim kami akan segera menghubungi Anda.", true);
+            form.reset();
+          } else {
+            throw new Error(res.d && res.d.message);
+          }
+        })
+        .catch(function () {
+          show("Pesan belum bisa terkirim. Silakan coba lagi atau gunakan tombol \"Kirim via WhatsApp\".", false);
+        })
+        .then(function () {
+          btn.disabled = false;
+          btn.textContent = original;
+        });
+    });
+  }
+
   /* Animasi muncul saat scroll */
   window.addEventListener("load", function () {
     if (window.AOS) {
