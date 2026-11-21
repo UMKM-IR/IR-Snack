@@ -1,10 +1,4 @@
-/* ==========================================================
-   IR Snack - Stylesheet utama
-   Satu file untuk seluruh halaman. Ubah warna di bagian :root
-   dan seluruh website ikut berubah.
-   ========================================================== */
 
-/* ---------- 1. Token desain ---------- */
 :root {
   /* Warna merek */
   --navy: #1f3a7a;
@@ -964,13 +958,13 @@ main { overflow-x: clip; }
 }
 .footer-social a:hover { background: var(--gold); color: var(--navy-900); transform: translateY(-3px); }
 .footer-bottom {
-  margin-top: 28px; padding: 18px 0 0;
+  margin-top: 50px; padding: 22px 0;
   border-top: 1px solid rgba(255, 255, 255, .12);
   font-size: .85rem;
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
 }
 .footer-bottom .credit a { text-decoration: underline; text-underline-offset: 3px; }
-.footer-bottom { justify-content: center; text-align: center; }
+@media (max-width: 575.98px) { .footer-bottom { justify-content: center; text-align: center; } }
 
 
 /* ---------- 18. Tombol kembali ke atas ---------- */
@@ -995,3 +989,12 @@ main { overflow-x: clip; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   [data-aos] { opacity: 1 !important; transform: none !important; }
 }
+
+/* Tombol WhatsApp & status formulir */
+.btn-ir-wa { background: #25d366; color: #fff; box-shadow: 0 8px 20px rgba(37, 211, 102, .28); }
+.btn-ir-wa:hover { background: #1ebe5b; color: #fff; }
+.form-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.form-status { margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-size: .94rem; font-weight: 600; }
+.form-status.ok { background: #e6f5ec; color: #246b3b; }
+.form-status.err { background: #fdeaea; color: #a61b1b; }
+.btn-ir[disabled] { opacity: .65; pointer-events: none; }
