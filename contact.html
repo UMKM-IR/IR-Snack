@@ -26,6 +26,21 @@
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
   <noscript><style>[data-aos]{opacity:1!important;transform:none!important}</style></noscript>
+  <style>
+    .form-card{position:relative}
+    .form-popup{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(255,255,255,.96);border-radius:inherit;opacity:0;visibility:hidden;transition:opacity .25s}
+    .form-popup.show{opacity:1;visibility:visible}
+    .form-popup .box{text-align:center;max-width:360px}
+    .form-popup .icon{width:76px;height:76px;margin:0 auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;color:#fff;background:#3f9b5b;animation:popIn .4s ease}
+    .form-popup.error .icon{background:#d62828}
+    .form-popup h4{font-size:1.4rem;margin-bottom:6px;color:#1f3a7a}
+    .form-popup p{color:#5b6577;margin-bottom:18px}
+    @keyframes popIn{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+    .form-actions{display:flex;flex-wrap:wrap;gap:12px}
+    .btn-ir-wa{background:#25d366;color:#fff}
+    .btn-ir-wa:hover{background:#1ebe5b;color:#fff}
+    .btn-ir[disabled]{opacity:.65;pointer-events:none}
+  </style>
 </head>
 <body>
 
@@ -112,10 +127,17 @@
                   <button type="submit" class="btn-ir btn-ir-primary" id="submit-btn">Kirim Pesan</button>
                   <button type="button" class="btn-ir btn-ir-wa" id="wa-btn"><i class="bi bi-whatsapp"></i> Kirim via WhatsApp</button>
                 </div>
-                <div id="form-status" class="form-status" role="status" aria-live="polite" hidden></div>
               </div>
             </div>
-          </form>
+            <div id="form-popup" class="form-popup" role="alertdialog" aria-live="assertive" aria-labelledby="popup-title">
+            <div class="box">
+              <div class="icon"><i class="bi bi-check-lg" id="popup-icon"></i></div>
+              <h4 id="popup-title"></h4>
+              <p id="popup-text"></p>
+              <button type="button" class="btn-ir btn-ir-navy" id="popup-close">Tutup</button>
+            </div>
+          </div>
+        </form>
         </div>
       </div>
     </div>
@@ -152,5 +174,65 @@
 
 <script src="assets/vendor/aos/aos.js"></script>
 <script src="assets/js/main.js"></script>
+<script>
+(function () {
+  var form = document.getElementById("contact-form");
+  if (!form) return;
+  var btn = document.getElementById("submit-btn");
+  var waBtn = document.getElementById("wa-btn");
+  var popup = document.getElementById("form-popup");
+  var icon = document.getElementById("popup-icon");
+  var title = document.getElementById("popup-title");
+  var text = document.getElementById("popup-text");
+
+  function showPopup(ok, t, msg) {
+    popup.classList.toggle("error", !ok);
+    icon.className = "bi " + (ok ? "bi-check-lg" : "bi-x-lg");
+    title.textContent = t;
+    text.textContent = msg;
+    popup.classList.add("show");
+  }
+  document.getElementById("popup-close").addEventListener("click", function () {
+    popup.classList.remove("show");
+  });
+
+  waBtn.addEventListener("click", function () {
+    if (!form.reportValidity()) return;
+    var f = form.elements;
+    var msg = "Halo IR Snack,\n\nNama: " + f.name.value + "\nEmail: " + f.email.value +
+      "\nSubjek: " + f.subject.value + "\n\n" + f.message.value;
+    window.open("https://wa.me/" + form.getAttribute("data-wa") + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    if (form.elements._honey && form.elements._honey.value) return;
+
+    var label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Mengirim...";
+
+    fetch(form.action.replace("formsubmit.co/", "formsubmit.co/ajax/"), {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: new FormData(form)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (String(d.success) === "true") {
+          showPopup(true, "Pesan terkirim!", "Terima kasih, pesan Anda sudah kami terima. Tim kami akan segera menghubungi Anda.");
+          form.reset();
+        } else {
+          showPopup(false, "Pesan belum terkirim", (d && d.message ? d.message + " " : "") + "Silakan coba lagi atau kirim lewat WhatsApp.");
+        }
+      })
+      .catch(function () {
+        showPopup(false, "Pesan belum terkirim", "Terjadi gangguan koneksi. Silakan coba lagi atau kirim lewat WhatsApp.");
+      })
+      .then(function () { btn.disabled = false; btn.textContent = label; });
+  });
+})();
+</script>
 </body>
 </html>
