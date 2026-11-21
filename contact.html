@@ -126,16 +126,15 @@
                 </div>
               </div>
             </div>
-
             <div id="form-popup" class="form-popup" role="alertdialog" aria-live="assertive" aria-labelledby="popup-title">
-              <div class="box">
-                <div class="icon"><i class="bi bi-check-lg" id="popup-icon"></i></div>
-                <h4 id="popup-title"></h4>
-                <p id="popup-text"></p>
-                <button type="button" class="btn-ir btn-ir-navy" id="popup-close">Tutup</button>
-              </div>
+            <div class="box">
+              <div class="icon"><i class="bi bi-check-lg" id="popup-icon"></i></div>
+              <h4 id="popup-title"></h4>
+              <p id="popup-text"></p>
+              <button type="button" class="btn-ir btn-ir-navy" id="popup-close">Tutup</button>
             </div>
-          </form>
+          </div>
+        </form>
         </div>
       </div>
     </div>
@@ -193,33 +192,44 @@
     popup.classList.remove("show");
   });
 
+  function resetBtn() {
+    btn.disabled = false;
+    btn.textContent = "Kirim Pesan";
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (!form.reportValidity()) return;
     if (form.elements._honey && form.elements._honey.value) return;
 
-    var label = btn.textContent;
     btn.disabled = true;
     btn.textContent = "Mengirim...";
+
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, 20000);
 
     fetch(form.action.replace("formsubmit.co/", "formsubmit.co/ajax/"), {
       method: "POST",
       headers: { Accept: "application/json" },
-      body: new FormData(form)
+      body: new FormData(form),
+      signal: ctrl.signal
     })
       .then(function (r) { return r.json(); })
       .then(function (d) {
+        clearTimeout(timer);
+        resetBtn();
         if (String(d.success) === "true") {
-          showPopup(true, "Pesan terkirim!", "Terima kasih, pesan Anda sudah kami terima. Tim kami akan segera menghubungi Anda.");
           form.reset();
+          showPopup(true, "Pesan terkirim!", "Terima kasih, pesan Anda sudah kami terima. Tim kami akan segera menghubungi Anda.");
         } else {
           showPopup(false, "Pesan belum terkirim", (d && d.message ? d.message + " " : "") + "Silakan coba lagi.");
         }
       })
       .catch(function () {
-        showPopup(false, "Pesan belum terkirim", "Terjadi gangguan koneksi. Silakan coba lagi.");
-      })
-      .then(function () { btn.disabled = false; btn.textContent = label; });
+        clearTimeout(timer);
+        resetBtn();
+        showPopup(false, "Pesan belum terkirim", "Koneksi terlalu lama atau terganggu. Silakan coba lagi.");
+      });
   });
 })();
 </script>
